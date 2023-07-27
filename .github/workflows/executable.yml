@@ -1,10 +1,7 @@
 name: Build executables
-
 on: workflow_dispatch
-
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   build:
     strategy:
@@ -15,6 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
         - uses: actions/checkout@v3
+        - uses: ConorMacBride/install-package@v1
+          with:
+            brew: postgresql@14 protobuf
+            apt: lld postgresql protobuf-compiler
         - uses: taiki-e/upload-rust-binary-action@v1
           with:
             # (required) Comma-separated list of binary names (non-extension portion of filename) to build and upload.
@@ -31,3 +32,4 @@ jobs:
             # (required) GitHub token for uploading assets to GitHub Releases.
             token: ${{ secrets.GITHUB_TOKEN }}
             ref: refs/tags/my_tag
+            checksum: sha256
